@@ -2,316 +2,431 @@
 <html lang="it">
 <head>
     <meta charset="UTF-8">
-    <title>Display Ascensore</title>
+    <title>Display Ascensore Chivasso - Regia Direzionale HD</title>
     <style>
-        /* RESET GENERALE */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Arial', sans-serif;
-            -webkit-user-select: none;
-            user-select: none;
-        }
-
-        body {
-            background-color: #000000;
-            color: #ffffff;
-            width: 100vw;
-            height: 100vh;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* STRUTTURA GRIGLIA SUPERIORE */
-        #top-grid {
-            display: grid;
-            grid-template-columns: 38% 24% 38%;
-            width: 100vw;
-            height: 32vh;
-            border-bottom: 2px solid #333333;
+        /* Struttura a tutto schermo nero assoluto */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { margin: 0; background: #000; color: #fff; font-family: sans-serif; overflow: hidden; height: 100vh; }
+        #schermo { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: space-between; }
+        
+        /* 1. FASCIA SUPERIORE FISSA */
+        #sopra { display: flex; justify-content: space-between; align-items: center; padding: 20px 30px; background: #1a1a1a; border-bottom: 3px solid #333; height: 25vh; box-sizing: border-box; z-index: 100; position: relative; }
+        
+        /* MODIFICA: Ingrandita solo la prima riga della data (font-size aumentato a 1.9rem) e alzata */
+        #orologio-box { width: 38%; font-size: 1.9rem; text-transform: uppercase; font-weight: bold; line-height: 1.25; z-index: 110; margin-top: -16px; }
+        
+        /* MODIFICA: "Oggi si festeggia" uniformato in bianco lucido e grassetto come la ricorrenza */
+        #santo-box { font-size: 1.25rem; color: #ffffff; margin-top: 5px; font-weight: bold; text-transform: none; font-style: normal; }
+        #ricorrenza-box { font-size: 1.25rem; color: #ffffff; margin-top: 4px; font-weight: bold; text-transform: none; font-style: normal; }
+        
+        /* Allineamento zero e quota */
+        #altimetro-box { 
             position: absolute;
-            top: 0;
-            left: 0;
-            z-index: 100;
-            background: #000000;
-        }
-
-        .top-box {
+            left: 50%; 
+            top: 50%;
+            transform: translate(-57px, -50%); 
+            display: flex; 
+            flex-direction: row; 
+            align-items: center; 
+            justify-content: center; 
             height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            padding: 0 15px;
-            overflow: hidden;
+            z-index: 105;
         }
-
-        /* FASCIA SUPERIORE SINISTRA: DATA IN VERDE */
-        #orologio-box {
-            width: 38%;
-            font-size: 1.9rem;
-            text-transform: uppercase;
-            font-weight: bold;
-            line-height: 1.25;
-            z-index: 110;
-            margin-top: -16px;
-            color: #00ff00;
+        #altimetro-piano { 
+            font-size: calc(25vh - 6px); 
+            color: #ff0000; 
+            font-weight: 900; 
+            line-height: 1; 
         }
-
-        #santo-box {
-            font-size: 1.15rem;
-            color: #ffffff;
-            text-transform: uppercase;
-            margin-top: 5px;
-            font-weight: normal;
-        }
-
-        #ricorrenza-box {
-            font-size: 1.15rem;
-            color: #ffffff;
-            text-transform: uppercase;
-            margin-top: 4px;
-            font-weight: normal;
-            line-height: 1.2;
-            white-space: normal;
-        }
-
-        /* FASCIA SUPERIORE CENTRALE: ZERO IN GIALLO MAX 25VH */
-        #piano-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-        }
-
-        #numero-piano {
-            font-size: 25vh;
-            font-weight: 900;
-            color: #ffff00;
-            line-height: 1;
-            margin-top: 2mm;
-            margin-bottom: 2mm;
-            display: inline-block;
-            position: relative;
-            transform: translateX(-22px);
-        }
-
-        #quota-box {
-            position: absolute;
-            left: calc(50% + 15px);
-            font-size: 2.4rem;
-            color: #ffffff;
-            font-weight: bold;
+        #altimetro-quota { 
+            font-size: 2.4rem; 
+            color: #ffffff; 
+            font-weight: bold; 
+            margin-left: 1cm; 
             white-space: nowrap;
         }
+        
+        /* Quadro meteo superiore destro */
+        #meteo-box { width: 35%; text-align: right; font-size: 1.35rem; min-width: 320px; line-height: 1.35; font-weight: bold; margin-top: -4px; z-index: 110; }
+        #meteo-temp { font-size: 4.2rem; color: #f1c40f; font-weight: 900; margin-bottom: 2px; display: flex; align-items: center; justify-content: flex-end; gap: 15px; }
+        #meteo-box svg { width: 95px; height: 95px; filter: drop-shadow(0 4px 10px rgba(0,0,0,0.5)); }
+        .testo-bianco-meteo { color: #ffffff !important; }
 
-        /* FASCIA SUPERIORE DESTRA */
-        #meteo-mini-box {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-right: 10px;
-        }
+        /* 2. AREA CENTRALE MULTIMEDIALE A SCENA REGOLATA */
+        #centro { flex: 1; height: 68vh; background: #000; position: relative; overflow: hidden; }
 
-        #mini-icona {
-            width: 75px;
-            height: 75px;
-        }
-
-        #mini-temp {
-            font-size: 3.2rem;
-            font-weight: bold;
-            color: #ffffff;
-        }
-
-        #dati-tecnici-box {
+        /* LIVELLO RETE METEO TV */
+        #blocco-meteo-scena {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: linear-gradient(135deg, #061124 0%, #0d2552 50%, #1a3f85 100%);
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            font-size: 1rem;
-            color: #ffffff;
-            font-weight: bold;
-            margin-top: 2px;
-            line-height: 1.3;
-        }
-
-        .riga-tecnica {
-            display: flex;
             justify-content: space-between;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-            padding: 2px 0;
-        }
-
-        /* AREA CENTRALE (REGIA E ANIMAZIONE) */
-        #main-content {
-            position: absolute;
-            top: 32vh;
-            left: 0;
-            width: 100vw;
-            height: 68vh;
+            padding: 20px 30px 2px 30px;
             z-index: 10;
-        }
-
-        .layer {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100%;
-            opacity: 0;
-            transition: opacity 1.5s ease-in-out;
-            display: flex;
-            align-items: center;
-        }
-
-        .layer.active {
             opacity: 1;
-            z-index: 20;
+            transition: opacity 1.5s ease-in-out;
         }
 
-        /* QUADRO METEO CENTRALE */
-        #quadro-meteo {
-            display: flex;
-            align-items: center;
-            padding-left: 5vw;
-            width: 100vw;
+        #meteo-centrale-contenitore { 
+            display: flex; 
+            justify-content: flex-start; 
+            align-items: center; 
+            flex: 1; 
+            gap: 20px;
+            padding-left: 20px;
         }
+        #meteo-grafica-vettoriale { width: 250px; height: 250px; display: flex; justify-content: center; align-items: center; }
+        #stato-testo-centro { font-size: 2.8rem; color: #ffffff; text-transform: uppercase; letter-spacing: 2px; font-weight: bold; }
 
-        #meteo-visual {
+        /* Griglia dei 7 rettangoli schiacciata sul fondo (altezza 22vh bloccata) */
+        #previsioni-7giorni-box { display: grid; grid-template-columns: repeat(7, 1fr); gap: 12px; width: 100%; height: 22vh; margin-bottom: 0px; }
+        .colonna-giorno {
+            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03));
+            border: 1px solid rgba(255, 255, 255, 0.22);
+            border-radius: 12px;
             display: flex;
             flex-direction: column;
+            justify-content: space-around;
             align-items: center;
-            justify-content: center;
-            width: 350px;
-        }
-
-        #svg-meteo-container {
-            width: 220px;
-            height: 220px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #meteo-testo {
-            font-size: 2.5rem;
-            font-weight: bold;
-            color: #ffffff;
-            text-transform: uppercase;
-            margin-top: 3mm;
+            padding: 6px 4px;
+            font-weight: 900;
             text-align: center;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+            backdrop-filter: blur(5px);
         }
+        .colonna-giorno-nome { font-size: 1.4rem; color: #ffffff; text-transform: uppercase; }
+        .colonna-giorno-icona { width: 45px; height: 45px; display: flex; justify-content: center; align-items: center; }
+        .colonna-giorno-icona svg { width: 100%; height: 100%; }
+        .colonna-giorno-temp { font-size: 1.4rem; color: #ffffff; margin: 2px 0; }
+        .temp-min-c { color: #40a9ff; }
+        .temp-max-c { color: #ff5252; margin-left: 6px; }
+        .colonna-giorno-extra { font-size: 1.1rem; color: #38bdf8; font-weight: bold; }
 
-        /* QUADRO FOTO CONDOMINIALE */
-        #quadro-foto {
-            width: 100vw;
-            height: 100%;
-            justify-content: center;
-            align-items: center;
-            background: #000000;
-        }
+        /* LIVELLO FOTO CONDOMINIALI NAS */
+        #blocco-foto-scena { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; opacity: 0; transition: opacity 1.5s ease-in-out; }
+        .foto-condominio-singola { width: 100%; height: 100%; object-fit: cover; position: absolute; top: 0; left: 0; }
 
-        #foto-nas {
-            max-width: 90%;
-            max-height: 95%;
-            object-fit: contain;
-            box-shadow: 0 0 20px rgba(0,0,0,0.8);
-            border: 3px solid #333333;
-        }
-
-        /* GRANDE FRECCIA CENTRALE */
-        #freccia-container {
+        /* MODIFICA: Triangolo ingrandito di un ulteriore centimetro verso il basso (height aumentata con viewBox esteso) */
+        #contenitore-freccia-direzionale {
             position: absolute;
-            bottom: 5vh;
+            top: calc(5vh + 1cm); 
+            margin-top: -1.7cm; 
             left: 50%;
             transform: translateX(-50%);
-            z-index: 150;
-            width: 160px;
-            height: 260px;
+            width: 35vw;
+            height: calc(35vh + 5cm); /* Aumentata di 1cm in basso per allungare la coda */
+            z-index: 900;
             display: flex;
             justify-content: center;
             align-items: center;
             pointer-events: none;
         }
-
-        .freccia-svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0px 0px 10px rgba(255,255,255,0.3));
+        
+        .fettina-freccia {
+            fill: #ff0000; 
+            stroke: #000000; 
+            stroke-width: 2px;
+            animation: movimientoScaliniSalita 1.2s infinite linear;
         }
+        .fettina-f1 { animation-delay: 0.0s; }
+        .fettina-f2 { animation-delay: 0.2s; }
+        .fettina-f3 { animation-delay: 0.4s; }
+        .fettina-f4 { animation-delay: 0.6s; }
+        .fettina-f5 { animation-delay: 0.8s; }
+
+        @keyframes movimientoScaliniSalita {
+            0% { opacity: 0.15; }
+            50% { opacity: 1; filter: drop-shadow(0 0 6px #ff0000); }
+            100% { opacity: 0.15; }
+        }
+
+        /* Box avviso condominiale fluttuante tutto a destra */
+        #box-avviso-sovraimpressione { 
+            position: absolute;
+            bottom: 25vh; 
+            right: 30px;
+            width: 420px; 
+            background: rgba(0, 0, 0, 0.95); 
+            border-left: 6px solid #ff3334; 
+            padding: 15px 20px; 
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+            z-index: 999; 
+            display: none; 
+        }
+        #box-avviso-sovraimpressione b { color: #ffcc00; font-size: 0.95rem; letter-spacing: 1px; display: block; margin-bottom: 3px; text-transform: uppercase; }
+        #testo-avviso { font-size: 1.3rem; font-weight: bold; line-height: 1.4; color: #ffffff; }
+
+        /* 3. BARRA NOTIZIE IN BASSO (ROSSO TENUE) */
+        #sotto { height: 7vh; background: #000000; padding: 12px; font-size: 1.4rem; white-space: nowrap; overflow: hidden; border-top: 2px solid #222; display: flex; align-items: center; box-sizing: border-box; font-weight: bold; z-index: 100; }
+        #notizie { display: inline-block; padding-left: 100%; animation: scorre 35s linear infinite; }
+        @keyframes scorre { 0% { transform: translate3d(0, 0, 0); } 100% { transform: translate3d(-100%, 0, 0); } }
     </style>
 </head>
 <body>
 
-    <!-- GRIGLIA SUPERIORE -->
-    <div id="top-grid">
-        <!-- SINISTRA -->
-        <div class="top-box" id="orologio-box">
-            <div id="testo-data">CARICAMENTO...</div>
-            <div id="santo-box">OGGI SI FESTEGGIA: San Vittorio Martire</div>
-            <div id="ricorrenza-box">RICORRENZA STORICA DI OGGI:<br>Nessun dato disponibile</div>
+    <!-- DEFINE CONDIVISI FILTRI METEO HD -->
+    <svg style="position: absolute; width: 0; height: 0;">
+        <defs>
+            <linearGradient id="raggi-fuoco" x1="0%" y1="0%" x2="0%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="25%" stop-color="#fff200"/><stop offset="70%" stop-color="#ff6a00"/><stop offset="100%" stop-color="#d90429"/>
+            </linearGradient>
+            <radialGradient id="nucleo-sole-3d" cx="35%" cy="35%" r="65%">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="20%" stop-color="#fffbeb"/><stop offset="60%" stop-color="#fbbf24"/><stop offset="100%" stop-color="#d97706"/>
+            </radialGradient>
+            <radialGradient id="sfumatura-cotone" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(255,255,255,1)"/>
+                <stop offset="45%" stop-color="rgba(248,250,252,0.95)"/>
+                <stop offset="75%" stop-color="rgba(203,213,225,0.6)"/>
+                <stop offset="100%" stop-color="rgba(148,163,184,0)"/>
+            </radialGradient>
+            <linearGradient id="luna-argento" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ffffff"/><stop offset="50%" stop-color="#cbd5e1"/><stop offset="100%" stop-color="#475569"/>
+            </linearGradient>
+            <filter id="bagliore-neon" x="-40%" y="-40%" width="180%" height="180%">
+                <feGaussianBlur stdDeviation="8" result="blur" /><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            <filter id="sfocatura-cotonata" x="-30%" y="-30%" width="160%" height="160%">
+                <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="4" result="noise" />
+                <feDisplacementMap in="SourceGraphic" in2="noise" scale="35" xChannelSelector="R" yChannelSelector="G" result="displaced"/>
+                <feGaussianBlur in="displaced" stdDeviation="14"/>
+            </filter>
+        </defs>
+    </svg>
+
+    <div id="schermo">
+        <!-- 1. Barra Superiore Fissa -->
+        <div id="sopra">
+            <div id="orologio-box">
+                <div id="testo-data">GIOVEDÌ 21 MAGGIO 2026</div>
+                <div id="santo-box">Oggi si festeggia: San Vittorio Martire</div>
+                <!-- MODIFICA: Scritto "Ricorrenza storica di oggi:" -->
+                <div id="ricorrenza-box">Ricorrenza storica di oggi: Nel 1927 Charles Lindbergh compie la prima trasvolata oceanica senza scalo</div>
+            </div>
+            
+            <div id="altimetro-box">
+                <div id="altimetro-piano">0</div>
+                <div id="altimetro-quota">183 mt s.l.m.</div>
+            </div>
+            
+            <div id="meteo-box">
+                <div id="com-icona-superiore" style="display:inline-block; vertical-align:middle;"></div>
+                <span id="temp-alto" style="vertical-align:middle;">23°C</span>
+                <div class="testo-bianco-meteo">MIN: 13° | MAX: 25°</div>
+                <div class="testo-bianco-meteo">UMIDITÀ: 55% | PRESS: 1018 hPa</div>
+                <div class="testo-bianco-meteo">PIOGGIA: 0% | VENTO: 7 KM/H NORD OVEST</div>
+            </div>
         </div>
 
-        <!-- CENTRO -->
-        <div class="top-box" id="piano-box">
-            <div id="numero-piano">0</div>
-            <div id="quota-box">183 mt s.l.m.</div>
-        </div>
-
-        <!-- DESTRA -->
-        <div class="top-box" style="width:100%;">
-            <div id="meteo-mini-box">
-                <div id="mini-icona">
-                    <svg viewBox="0 0 100 100" width="100%" height="100%">
-                        <defs>
-                            <radialGradient id="soleGrad2" cx="50%" cy="50%" r="50%">
-                                <stop offset="0%" stop-color="#fffb00"/>
-                                <stop offset="100%" stop-color="#ff5100"/>
-                            </radialGradient>
-                            <filter id="sfocatura2">
-                                <feGaussianBlur stdDeviation="3" />
-                            </filter>
-                        </defs>
-                        <circle cx="45" cy="45" r="22" fill="url(#soleGrad2)"/>
-                        <path d="M 30,55 Q 40,42 55,45 Q 68,42 75,52 Q 85,55 82,68 Q 85,82 72,82 L 32,82 Q 20,82 22,68 Q 20,55 30,55 Z" fill="#ffffff" filter="url(#sfocatura2)" opacity="0.9"/>
-                    </svg>
+        <!-- 2. Area Centrale Multimediale -->
+        <div id="centro">
+            
+            <!-- LIVELLO RETE METEO TV -->
+            <div id="blocco-meteo-scena">
+                <div id="meteo-centrale-contenitore">
+                    <div id="meteo-grafica-vettoriale"></div>
+                    <div id="meteo-dati-centro">
+                        <div id="stato-testo-centro">VARIABILE</div>
+                    </div>
                 </div>
-                <div id="mini-temp">22°C</div>
+                <div id="previsioni-7giorni-box"></div>
             </div>
-            <div id="dati-tecnici-box">
-                <div class="riga-tecnica"><span>MIN | MAX</span><span>14°C | 26°C</span></div>
-                <div class="riga-tecnica"><span>UMIDITÀ | PRESSIONE</span><span>58% | 1014 hPa</span></div>
-                <div class="riga-tecnica"><span>PIOGGIA % | VENTO</span><span>10% | 7 KM/H NORD OVEST</span></div>
+
+            <!-- LIVELLO FOTO CONDOMINIALI NAS -->
+            <div id="blocco-foto-scena">
+                <img id="foto-singola-nas" class="foto-condominio-singola" src="immagini/01.jpg" alt="Foto">
             </div>
+            
+            <!-- MODIFICA: TRIANGOLO ISOSCELE AD ALTA DEFINIZIONE ALLUNGATO DI 1CM IN BASSO NELLA CODA -->
+            <div id="contenitore-freccia-direzionale">
+                <svg width="100%" height="100%" viewBox="0 0 200 270" preserveAspectRatio="xMidYMid meet">
+                    <!-- Fetta 5: Punta del triangolo -->
+                    <path class="fettina-freccia fettina-f5" d="M100,5 L108,35 L92,35 Z" />
+                    <!-- Fetta 4: Sezione medio-alta -->
+                    <path class="fettina-freccia fettina-f4" d="M92,41 L108,41 L116,61 L84,61 Z" />
+                    <!-- Fetta 3: Sezione centrale -->
+                    <path class="fettina-freccia fettina-f3" d="M84,67 L116,67 L125,92 L75,92 Z" />
+                    <!-- Fetta 2: Sezione medio-bassa -->
+                    <path class="fettina-freccia fettina-f2" d="M75,98 L125,98 L135,123 L65,123 Z" />
+                    <!-- Fetta 1: Base del triangolo isoscele allungata di un gradino extra verso il basso -->
+                    <path class="fettina-freccia fettina-f1" d="M65,129 L135,129 L150,165 L100,148 L50,165 Z" />
+                </svg>
+            </div>
+            
+            <!-- Box avviso fluttuante regolato tutto a destra sopra la griglia -->
+            <div id="box-avviso-sovraimpressione">
+                <b>Avviso Condominiale</b>
+                <div id="testo-avviso"></div>
+            </div>
+        </div>
+
+        <!-- 3. Barra Notizie In Basso -->
+        <div id="sotto">
+            <div id="notizie">+++ CRONACA LIVE CHIVASSO: PAURA IN STAZIONE FERROVIARIA, VENTENNE MINACCIATO CON UN COLTELLO A BORDO DI UN CONVOGLIO PER LA RICHIESTA DI SIGARETTE • TRASPORTI: DA LUNEDÌ RIAPRE UFFICIALMENTE LA TRATTA FERROVIARIA IVREA-CHIVASSO • VIABILITÀ REGIONALE: GRAVE INCIDENTE STRADALE NELLA VICINA VOLPIANO IN VIA TORINO +++</div>
         </div>
     </div>
 
-    <!-- AREA CENTRALE -->
-    <div id="main-content">
-        <!-- LAYER METEO -->
-        <div class="layer active" id="layer-meteo">
-            <div id="quadro-meteo">
-                <div id="meteo-visual">
-                    <div id="svg-meteo-container">
-                        <svg viewBox="0 0 100 100" width="100%" height="100%">
-                            <defs>
-                                <radialGradient id="soleGrad" cx="50%" cy="50%" r="50%">
-                                    <stop offset="0%" stop-color="#fffb00"/>
-                                    <stop offset="30%" stop-color="#ffaa00"/>
-                                    <stop offset="100%" stop-color="#ff4500"/>
-                                </radialGradient>
-                                <filter id="nuvolaSfocata">
-                                    <feGaussianBlur stdDeviation="4" />
-                                </filter>
-                            </defs>
-                            <g stroke="#ffaa00" stroke-width="2" stroke-linecap="round">
-                                <line x1="50" y1="50" x2="50" y2="10"/>
-                                <line x1="50" y1="50" x2="50" y2="90"/>
-                                <line x1="50" y1="50" x2="10" y2="50"/>
-                                <line x1="50" y1="50" x2="90" y2="50"/>
-                                <line x1="50" y1="50" x2="22" y2="22"/>
-                                <line x1="50" y1="50" x2="78" y2="78"/>
-                                <line x1="50" y1="50" x2="22" y2="78"/>
-                                <line x1="50" y1="50" x2="78" y2="22"/>
-                            </g>
-                            <circle cx="50" cy="50" r="20" fill="url(#soleGrad)"/>
+    <script>
+        const mappaPiani = { "-1": 181, "0": 183, "1": 186, "2": 190, "3": 194, "4": 198 };
+
+        const COMP_SOLE = `<svg viewBox="0 0 100 100" width="100%" height="100%"><g fill="url(#raggi-fuoco)" filter="url(#bagliore-neon)"><path d="M50,2 L55,23 L45,23 Z"/><path d="M50,98 L55,77 L45,77 Z"/><path d="M2,50 L23,55 L23,45 Z"/><path d="M98,50 L77,55 L77,45 Z"/><path d="M15,15 L32,29 L26,35 Z"/><path d="M85,85 L68,71 L74,65 Z"/></g><circle cx="50" cy="50" r="23" fill="url(#nucleo-sole-3d)" filter="url(#bagliore-neon)"/><g filter="url(#sfocatura-cotonata)" opacity="0.95"><circle cx="35" cy="65" r="22" fill="url(#sfumatura-cotone)"/><circle cx="50" cy="58" r="25" fill="url(#sfumatura-cotone)"/><circle cx="68" cy="62" r="22" fill="url(#sfumatura-cotone)"/></g></svg>`;
+        const COMP_LUNA = `<svg viewBox="0 0 100 100" width="100%" height="100%"><path d="M30,22 A26,26 0 1,1 72,64 A30,30 0 1,0 30,22 Z" fill="url(#luna-argento)" filter="url(#bagliore-neon)"/><g filter="url(#sfocatura-cotonata)" opacity="0.9"><circle cx="45" cy="62" r="22" fill="url(#sfumatura-cotone)"/><circle cx="65" cy="58" r="22" fill="url(#sfumatura-cotone)"/></g></svg>`;
+        const COMP_COPERTO = `<svg viewBox="0 0 100 100" width="100%" height="100%"><g filter="url(#sfocatura-cotonata)" opacity="0.95"><circle cx="35" cy="55" r="20" fill="url(#sfumatura-cotone)"/><circle cx="55" cy="48" r="24" fill="url(#sfumatura-cotone)"/></g></svg>`;
+
+        const listaFoto = ["01.jpg", "02.jpg", "03.jpg", "04.jpg", "05.jpg"];
+        let indiceFotoAttuale = 0;
+        let faseMeteoAttiva = true;
+
+        async function scaricaRicorrenzaESantoSbloccati() {
+            try {
+                let d = new Date();
+                let m = String(d.getMonth() + 1).padStart(2, '0');
+                let g = String(d.getDate()).padStart(2, '0');
+                
+                let r = await fetch(`https://wikipedia.org{m}/${g}`);
+                let j = await r.json();
+                if(j.selected && j.selected.length > 0) {
+                    document.getElementById("ricorrenza-box").innerText = `Ricorrenza storica di oggi: Nel ${j.selected.year} ${j.selected.text}`;
+                }
+                
+                let rs = await fetch(`https://vercel.app{m}&giorno=${g}`);
+                let js = await rs.json();
+                if(js.santo) { document.getElementById("santo-box").innerText = `Oggi si festeggia: ${js.santo}`; }
+            } catch(e) { }
+        }
+
+        function gestisciRegiaFasi() {
+            const livelloMeteo = document.getElementById("blocco-meteo-scena");
+            const livelloFoto = document.getElementById("blocco-foto-scena");
+            const tagFoto = document.getElementById("foto-singola-nas");
+
+            if (faseMeteoAttiva) {
+                indiceFotoAttuale = (indiceFotoAttuale + 1) % listaFoto.length;
+                tagFoto.src = "immagini/" + listaFoto[indiceFotoAttuale] + "?v=" + new Date().getTime();
+                
+                tagFoto.onload = function() {
+                    livelloMeteo.style.opacity = 0;
+                    livelloFoto.style.opacity = 1;
+                    faseMeteoAttiva = false;
+                    setTimeout(gestisciRegiaFasi, 5000); 
+                };
+            } else {
+                livelloFoto.style.opacity = 0;
+                livelloMeteo.style.opacity = 1;
+                faseMeteoAttiva = true;
+                setTimeout(gestisciRegiaFasi, 10000); 
+            }
+        }
+
+        function caricaDatiMeteoLocali() {
+            const ora = new Date();
+            let isNotte = ora.getHours() < 6 || ora.getHours() >= 20;
+            
+            document.getElementById("com-icona-superiore").innerHTML = isNotte ? COMP_LUNA : COMP_SOLE;
+            document.getElementById("meteo-grafica-vettoriale").innerHTML = isNotte ? COMP_LUNA : COMP_SOLE;
+            document.getElementById("stato-testo-centro").innerText = isNotte ? "NOTTE SERENA" : "VARIABILE";
+
+            const giorniNomi = ["DOM", "LUN", "MAR", "MER", "GIO", "VEN", "SAB"];
+            let griglia = document.getElementById("previsioni-7giorni-box");
+            griglia.innerHTML = "";
+            
+            let dataGiro = new Date();
+            dataGiro.setDate(dataGiro.getDate() + 1); 
+
+            const previsioniFisse = [
+                { icona: COMP_SOLE, max: 25, min: 13, pioggia: 0 },
+                { icona: COMP_SOLE, max: 26, min: 14, pioggia: 0 },
+                { icona: COMP_COPERTO, max: 23, min: 15, pioggia: 10 },
+                { icona: COMP_SOLE, max: 25, min: 13, pioggia: 5 },
+                { icona: COMP_SOLE, max: 27, min: 14, pioggia: 0 },
+                { icona: COMP_SOLE, max: 28, min: 16, pioggia: 0 },
+                { icona: COMP_COPERTO, max: 24, min: 14, pioggia: 20 }
+            ];
+
+            for(let i = 0; i < 7; i++) {
+                let nomeG = giorniNomi[dataGiro.getDay()];
+                let p = previsioniFisse[i];
+
+                griglia.innerHTML += `
+                    <div class="colonna-giorno">
+                        <div class="colonna-giorno-nome">${nomeG}</div>
+                        <div class="colonna-giorno-icona">${p.icona}</div>
+                        <div class="colonna-giorno-temp">
+                            <span class="temp-min-c">+${p.min}°</span><span class="temp-max-c">+${p.max}°</span>
+                        </div>
+                        <div class="colonna-giorno-extra"><span>💧 ${p.pioggia}%</span></div>
+                    </div>`;
+                dataGiro.setDate(dataGiro.getDate() + 1);
+            }
+        }
+
+        function aggiornaOrologio() {
+            const ora = new Date();
+            const giorni = ["DOMENICA", "LUNEDÌ", "MARTEDÌ", "MERCOLEDÌ", "GIOVEDÌ", "VENERDÌ", "SABATO"];
+            const mesi = ["GENNAIO", "FEBBRAIO", "MARZO", "APRILE", "MAGGIO", "GIUGNO", "LUGLIO", "AGOSTO", "SETTEMBRE", "OTTOBRE", "NOVEMBRE", "DICEMBRE"];
+            
+            document.getElementById('testo-data').innerText = `${giorni[ora.getDay()]} ${ora.getDate()} ${mesi[ora.getMonth()]} ${ora.getFullYear()} , ORA ${String(ora.getHours()).padStart(2, '0')}:${String(ora.getMinutes()).padStart(2, '0')}:${String(ora.getSeconds()).padStart(2, '0')}`;
+            
+            if(ora.getHours() === 0 && ora.getMinutes() === 0 && ora.getSeconds() === 0) {
+                scaricaRicorrenzaESantoSbloccati();
+                caricaDatiMeteoLocali();
+            }
+        }
+
+        let vecchioPiano = -99;
+        let timerArrestoCabina;
+
+        async function controllaPiano() {
+            try {
+                let r = await fetch('piano_corrente.json?v=' + new Date().getTime());
+                let d = await r.json();
+                let p = d.piano;
+                document.getElementById('altimetro-piano').innerText = p;
+                document.getElementById('altimetro-quota').innerText = `${mappaPiani[p] || 183} mt s.l.m.`;
+
+                const frecciaElemento = document.getElementById("contenitore-freccia-direzionale");
+                
+                if (vecchioPiano === -99) { vecchioPiano = p; }
+
+                if (p !== vecchioPiano) {
+                    frecciaElemento.style.display = "flex"; 
+                    vecchioPiano = p;
+                    
+                    clearTimeout(timerArrestoCabina);
+                    timerArrestoCabina = setTimeout(() => {
+                        frecciaElemento.style.display = "none"; 
+                    }, 4000);
+                }
+            } catch (e) {}
+        }
+
+        async function controllaAvviso() {
+            try {
+                let r = await fetch('avviso.txt?v=' + new Date().getTime());
+                let t = await r.text();
+                const box = document.getElementById("box-avviso-sovraimpressione");
+                if (t && t.trim() !== "" && !t.includes("<!DOCTYPE")) {
+                    document.getElementById("testo-avviso").innerHTML = t.trim().replace(/\n/g, "<br>");
+                    box.style.display = "block";
+                } else { box.style.display = "none"; }
+            } catch (e) {}
+        }
+
+        window.onload = function() {
+            aggiornaOrologio();
+            caricaDatiMeteoLocali();
+            scaricaRicorrenzaESantoSbloccati();
+            controllaPiano();
+            controllaAvviso();
+            
+            setTimeout(gestisciRegiaFasi, 10000);
+
+            setInterval(aggiornaOrologio, 1000);
+            setInterval(controllaPiano, 500);
+            setInterval(controllaAvviso, 3000);
+        };
+    </script>
+</body>
+</html>
